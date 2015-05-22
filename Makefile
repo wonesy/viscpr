@@ -2,7 +2,7 @@ CC = gcc
 LDFLAGS = -lncurses
 CFLAGS = -Wall -Werror -Wextra -g -std=c99 -c
 DEFINES = -D_POSIX_SOURCE
-SOURCES = main.c main_utils.c visual.c
+SOURCES = main.c main_utils.c visual.c visual_utils.c
 OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = viscpr
 

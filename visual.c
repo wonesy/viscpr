@@ -1,20 +1,21 @@
-#include <stdlib.h>
-#include <ncurses.h>
-#include <unistd.h>
-#include <stdint.h>
-
 #include "visual.h"
+#include "visual_utils.h"
 
-static WINDOW *cur_view;
+static struct viscpr_win cur_view;
 //static WINDOW *history_view; 
 
 static void vis_setup_windows()
 {
-    int height = LINES;
-    int width = COLS;
-    cur_view = newwin(height, width, 0, 0);
-    box(cur_view, 0, 0);
-    wrefresh(cur_view);
+    int height;
+    int width;
+
+    // Setup cur_view
+    height = LINES*0.75;
+    width = COLS/2;
+    strncpy(cur_view.title, "Current DEFLATE Position", TITLE_SIZE);
+    cur_view.w = newwin(height, width, 0, 0);
+    box(cur_view.w, 0, 0);
+    wrefresh(cur_view.w);
 }
 
 void vis_init_screen()
@@ -28,16 +29,13 @@ void vis_init_screen()
 
 void vis_cleanup()
 {
-    wrefresh(cur_view);
-    delwin(cur_view);
+    wrefresh(cur_view.w);
+    delwin(cur_view.w);
     endwin();
 }
 
 void vis_init_cur_view(uint8_t *buf, int size)
 {
-    for (int i = 0; i < size; i++) {
-        wprintw(cur_view, "%02x ", buf[i]);
-    }
-
-    wrefresh(cur_view);
+    util_wprint_buf(cur_view.w, cur_view.title, buf, size, WIN_MARGIN, WIN_MARGIN);
+    wrefresh(cur_view.w);
 }

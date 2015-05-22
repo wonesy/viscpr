@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     vis_init_screen();
     vis_init_cur_view(infile_buf, infile_sz);
 
-    sleep(2);
+    sleep(5);
 
     vis_cleanup();
 
