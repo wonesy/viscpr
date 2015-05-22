@@ -1,17 +1,18 @@
 CC = gcc
-LDFLAGS = 
+LDFLAGS = -lncurses
 CFLAGS = -Wall -Werror -Wextra -g -std=c99 -c
-SOURCES = main.c main_utils.c
+DEFINES = -D_POSIX_SOURCE
+SOURCES = main.c main_utils.c visual.c
 OBJECTS = $(SOURCES:.c=.o)
 EXECUTABLE = viscpr
 
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 
 .c.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(DEFINES) $< -o $@
 
 clean:
 	rm -f *.o $(EXECUTABLE)

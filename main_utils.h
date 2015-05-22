@@ -1,7 +1,21 @@
 #ifndef __MAIN_UTILS_H__
 #define __MAIN_UTILS_H__
 
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <argp.h>
+#include <errno.h>
+#include <assert.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#define MAX_INFILE_SIZE 256
+
 struct viscpr_opts {
+    char infile[MAX_INFILE_SIZE];
     bool debug;
 };
 
