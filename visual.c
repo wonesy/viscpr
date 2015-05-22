@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <unistd.h>
+#include <stdint.h>
 
 #include "visual.h"
 
@@ -9,7 +10,9 @@ static WINDOW *cur_view;
 
 static void vis_setup_windows()
 {
-    cur_view = newwin(5, 10, 0, 0);
+    int height = LINES;
+    int width = COLS;
+    cur_view = newwin(height, width, 0, 0);
     box(cur_view, 0, 0);
     wrefresh(cur_view);
 }
@@ -21,8 +24,6 @@ void vis_init_screen()
     keypad(stdscr, true);   // Enable arrow keys
 
     vis_setup_windows();
-
-    sleep(1);
 }
 
 void vis_cleanup()
@@ -32,4 +33,11 @@ void vis_cleanup()
     endwin();
 }
 
+void vis_init_cur_view(uint8_t *buf, int size)
+{
+    for (int i = 0; i < size; i++) {
+        wprintw(cur_view, "%02x ", buf[i]);
+    }
 
+    wrefresh(cur_view);
+}

@@ -5,7 +5,7 @@ static char args_doc[] = "DBGARG";
 
 static struct argp_option argp_opts[] = {
     {"debug", 'd', 0, 0, "Print debug information", 0},
-    {"infile", 'i', 0, 0, "Input file", 0},
+    {"infile", 'i', "FILE", 0, "Input file", 0},
     {0}
 };
 
@@ -56,7 +56,7 @@ static int get_file_size(int fileno)
     return st.st_size;
 }
 
-int rd_infile(char *infile, void *buf)
+int rd_infile(char *infile, uint8_t **buf)
 {
     int size;
     FILE *infile_fp;
@@ -71,7 +71,7 @@ int rd_infile(char *infile, void *buf)
     size = get_file_size(fileno(infile_fp));
     assert(size > 0);
 
-    buf = malloc(size);
+    *buf = malloc(size);
 
-    return fread(buf, 1, size, infile_fp); 
+    return fread(*buf, 1, size, infile_fp); 
 }

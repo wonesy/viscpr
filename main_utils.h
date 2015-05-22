@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <argp.h>
 #include <errno.h>
 #include <assert.h>
@@ -20,4 +21,5 @@ struct viscpr_opts {
 };
 
 int parse_cmdln(int, char **, struct viscpr_opts *);
+int rd_infile(char *, uint8_t **);
 #endif
