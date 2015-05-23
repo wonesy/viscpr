@@ -7,7 +7,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#define WIN_MARGIN 1
 #define TITLE_SIZE 128
 
 struct viscpr_win {
@@ -19,6 +18,7 @@ struct viscpr_win {
 
 void vis_init_screen();
 void vis_cleanup();
-void vis_init_cur_view(uint8_t *, int);
+void vis_init_views(uint8_t *, int);
+void vis_walk(uint8_t *, int);
 
 #endif

@@ -22,9 +22,11 @@ int main(int argc, char *argv[])
     }
 
     vis_init_screen();
-    vis_init_cur_view(infile_buf, infile_sz);
+    vis_init_views(infile_buf, infile_sz);
 
-    sleep(5);
+    //dc_start(infile_buf, infile_sz);
+
+    getchar();
 
     vis_cleanup();
 

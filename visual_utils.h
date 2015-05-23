@@ -5,5 +5,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void util_wprint_buf(WINDOW *, char *, uint8_t *, int , int, int);
+#define WIN_MARGIN  1
+#define ADDR_SIZE   9
+#define NO_HL_SYMB  -1
+
+int util_wprint_buf(WINDOW *, char *, uint8_t *, int, int, int);
 #endif
