@@ -8,6 +8,24 @@ static void util_wprint_title(WINDOW *win, char *title, int startx, int starty)
     wattroff(win, A_BOLD);
 }
 
+int util_wupdate_status(WINDOW *win,  char *title, struct dc_stream s)
+{
+    int x = WIN_MARGIN;
+    int y = WIN_MARGIN;
+
+    werase(win);
+    box(win, 0, 0);
+    util_wprint_title(win, title, WIN_MARGIN, WIN_MARGIN);
+
+    wmove(win, ++y, x);
+
+    wprintw(win, "BFinal: %s", (s.bfinal) ? "set" : "not set");
+    
+    wrefresh(win);
+
+    return 0;
+}
+
 int util_wprint_buf(WINDOW *win, char *title, uint8_t *buf, int length, int offset, int hl)
 {
     int ret;
@@ -22,6 +40,9 @@ int util_wprint_buf(WINDOW *win, char *title, uint8_t *buf, int length, int offs
     ret = length;
     addr = offset;
 
+    werase(win);
+    box(win, 0, 0);
+
     util_wprint_title(win, title, WIN_MARGIN, WIN_MARGIN);
 
     getbegyx(win, beg_y, beg_x);
@@ -29,6 +50,7 @@ int util_wprint_buf(WINDOW *win, char *title, uint8_t *buf, int length, int offs
 
     (void)beg_y;    //NOTE: unused variable
 
+    // Add 1 to the y-dir due to title
     wmove(win, WIN_MARGIN + 1, WIN_MARGIN);
 
     wprintw(win, "0x%06x: ", addr);
@@ -48,13 +70,15 @@ int util_wprint_buf(WINDOW *win, char *title, uint8_t *buf, int length, int offs
 
             wprintw(win, "0x%06x: ", addr);
         }
-
+        
+        // If we've reached the highlight char, turn on modifiers
         if (i == hl) {
             wattron(win, COLOR_PAIR(1) | A_BOLD);
         }
 
         wprintw(win, "%02x", buf[i]);
 
+        // Turn off modifiers after printing char
         if (max_x > (x + 1 + WIN_MARGIN)) {
             waddch(win, ' ');
         }

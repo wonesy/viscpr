@@ -1,10 +1,7 @@
 #include "decompress.h"
 #include "visual.h"
 
-// Global stream information
-static struct dc_stream s;
 
-/*
 static uint8_t next_bit(struct dc_stream *s)
 {
     uint8_t bit;
@@ -34,7 +31,7 @@ static uint8_t read_bits(struct dc_stream *s, int need)
 
     return bits_val;
 }
-
+/*
 static void read_huff_tree(struct dc_stream *s)
 {
     uint8_t hlit;
@@ -44,13 +41,22 @@ static void read_huff_tree(struct dc_stream *s)
     hlit = read_bits(s, 5);
     hdist = read_bits(s, 5);
     hclen = read_bits(s, 4);
-}*/
+}
+*/
 
-void dc_step()
+void dc_get_bfinal(struct dc_stream *s)
 {
-    switch (s.cur_state)
+    uint8_t bfinal;
+
+    bfinal = read_bits(s, 1);
+    s->bfinal = bfinal;
+}
+
+void dc_step(struct dc_stream *s)
+{
+    switch (s->cur_state)
     {
-        case DC_BFINAL:
+        case FSM_BFINAL:
             printf("here we go\n");
             break;
         default:
@@ -58,19 +64,23 @@ void dc_step()
     }
 }
 
-void dc_init(uint8_t *stream, int len)
+struct dc_stream dc_init(uint8_t *stream, int len)
 {
+    struct dc_stream s;
+
     s.stream = stream;
     s.cur_offs = 0;
     s.stream_len = len;
-    s.buf = 0;
-    s.mask = 0;
-    s.cur_state = DC_BFINAL;
+    s.buf = stream[0];
+    s.mask = 1;
+    s.bfinal = 0;
+    s.cur_state = FSM_BFINAL;
 
     if (s.stream_len == 0) {
         printf("yoyoy\n");
     }
 
+    return s;
 }
 
 

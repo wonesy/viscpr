@@ -19,5 +19,6 @@ struct viscpr_win {
 void vis_init_screen(uint8_t *, int);
 void vis_cleanup();
 void vis_walk(uint8_t *, int);
+int vis_start();
 
 #endif
