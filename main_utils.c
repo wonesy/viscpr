@@ -63,7 +63,6 @@ int rd_infile(char *infile, uint8_t **buf)
 
     infile_fp = fopen(infile, "r");
     if (!infile_fp) {
-        printf("Failed to open file %s", infile);
         errno = ENOENT;
         return -1;
     }

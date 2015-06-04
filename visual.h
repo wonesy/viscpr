@@ -16,9 +16,8 @@ struct viscpr_win {
     int width;
 };
 
-void vis_init_screen();
+void vis_init_screen(uint8_t *, int);
 void vis_cleanup();
-void vis_init_views(uint8_t *, int);
 void vis_walk(uint8_t *, int);
 
 #endif

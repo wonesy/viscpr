@@ -1,5 +1,6 @@
 #include "visual.h"
 #include "visual_utils.h"
+#include "decompress.h"
 
 static struct viscpr_win cur_view;
 static struct viscpr_win hist_view; 
@@ -31,7 +32,20 @@ static void vis_setup_windows()
     // Setup tree_view
 }
 
-void vis_init_screen()
+static void vis_init_views(uint8_t *buf, int size)
+{
+    util_wprint_buf(cur_view.w, cur_view.title, buf, size, 0, NO_HL_SYMB);
+    util_wprint_buf(hist_view.w, hist_view.title, buf, size, 0, NO_HL_SYMB);
+    wrefresh(cur_view.w);
+    wrefresh(hist_view.w);
+}
+
+static void vis_init_decompress(uint8_t *buf, int len)
+{
+    dc_init(buf, len);
+}
+
+void vis_init_screen(uint8_t *buf, int len)
 {
     initscr();              // Start curses mode
     cbreak();               // Disable key buffering
@@ -40,6 +54,8 @@ void vis_init_screen()
     init_pair(1, COLOR_CYAN, COLOR_BLACK);
 
     vis_setup_windows();
+    vis_init_views(buf, len);
+    vis_init_decompress(buf, len);
 }
 
 void vis_cleanup()
@@ -51,16 +67,6 @@ void vis_cleanup()
     delwin(hist_view.w);
 
     endwin();
-}
-
-void vis_init_views(uint8_t *buf, int size)
-{
-    util_wprint_buf(cur_view.w, cur_view.title, buf, size, 0, NO_HL_SYMB);
-    util_wprint_buf(hist_view.w, hist_view.title, buf, size, 0, NO_HL_SYMB);
-    wrefresh(cur_view.w);
-    wrefresh(hist_view.w);
-    vis_walk(buf, size);
-
 }
 
 void vis_walk(uint8_t *buf, int size)

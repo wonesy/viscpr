@@ -18,13 +18,11 @@ int main(int argc, char *argv[])
     
     infile_sz = rd_infile(opts.infile, &infile_buf);
     if (infile_sz <= 0) {
-        printf("fuck\n");
+        printf("Failed to open infile!\n");
+        exit(errno);
     }
 
-    vis_init_screen();
-    vis_init_views(infile_buf, infile_sz);
-
-    //dc_start(infile_buf, infile_sz);
+    vis_init_screen(infile_buf, infile_sz);
 
     getchar();
 
