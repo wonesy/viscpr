@@ -72,11 +72,21 @@ int vis_start()
         switch(s.cur_state)
         {
             case FSM_BFINAL:
+                s.mask = 1;
                 dc_get_bfinal(&s);
+                s.next_state = FSM_ENCODING;
+                break;
+            case FSM_ENCODING:
+                dc_get_encoding(&s);
+                s.next_state = FSM_IDLE;
                 break;
             default:
                 ret = -1;
         }
+
+        s.prev_state = s.cur_state;
+        s.cur_state = s.next_state;
+        s.next_state = FSM_IDLE;
 
         util_wprint_buf(cur_view.w, cur_view.title, s.stream, s.stream_len, 0, s.cur_offs);
         util_wupdate_status(status_view.w, status_view.title, s);

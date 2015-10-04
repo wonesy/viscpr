@@ -8,18 +8,85 @@ static void util_wprint_title(WINDOW *win, char *title, int startx, int starty)
     wattroff(win, A_BOLD);
 }
 
+static void util_get_byte_as_bin(char *str, struct dc_stream s)
+{
+    // Assume str has space :(
+    uint8_t byte;
+    uint8_t mask;
+    int i;
+
+    byte = s.buf;
+    mask = 0x80;    // most significant bit
+
+    for (i = 0; i < 8; i++)
+    {
+        str[i] = (byte & (mask>>i) ? '1' : '0');
+    }
+
+}
+
 int util_wupdate_status(WINDOW *win,  char *title, struct dc_stream s)
 {
+    char bit_string[BIT_STRING_LEN];
+    int i;
     int x = WIN_MARGIN;
     int y = WIN_MARGIN;
+    uint8_t tmp_mask;
 
     werase(win);
     box(win, 0, 0);
     util_wprint_title(win, title, WIN_MARGIN, WIN_MARGIN);
 
-    wmove(win, ++y, x);
+    W_NEXTLN;
 
-    wprintw(win, "BFinal: %s", (s.bfinal) ? "set" : "not set");
+    if (s.prev_state == FSM_BFINAL) {
+        W_BOLD_ON;
+    }
+
+    wprintw(win, "BFinal:   %s", (s.bfinal) ? "set" : "not set");
+
+    if (s.prev_state == FSM_BFINAL) {
+        W_BOLD_OFF;
+    }
+
+    W_NEXTLN;
+
+    if (s.prev_state == FSM_ENCODING) {
+        W_BOLD_ON;
+    }
+
+    wprintw(win, "Encoding: %s", ((s.encoding == STORED_BLOCK) ? "stored/none" :
+                                  (s.encoding == DYNAMIC_ENCODING) ? "dynamic" :
+                                  (s.encoding == STATIC_ENCODING) ? "static" :
+                                  "unknown"));
+    if (s.prev_state == FSM_ENCODING) {
+        W_BOLD_OFF;
+    }
+
+    W_NEXTLN;
+
+    wprintw(win, "Mask: %d", s.mask);
+
+    W_NEXTLN;
+
+    util_get_byte_as_bin(bit_string, s);
+
+    wprintw(win, "Current byte: ");
+
+    tmp_mask = s.prev_mask << (s.bits_requested-1);
+
+    for (i = 0; i < 8; i++)
+    {
+        if ((1<<(7-i) & tmp_mask)) {
+            W_BOLD_ON;
+        }
+
+        waddch(win, bit_string[i]);
+
+        if ((1<<(7-i) & s.prev_mask)) {
+            W_BOLD_OFF;
+        }
+    }
     
     wrefresh(win);
 

@@ -6,7 +6,7 @@ static char args_doc[] = "DBGARG";
 static struct argp_option argp_opts[] = {
     {"debug", 'd', 0, 0, "Print debug information", 0},
     {"infile", 'i', "FILE", 0, "Input file", 0},
-    {0}
+    {0,0,0,0,0,0}
 };
 
 static int parse_opt(int key, char *arg, struct argp_state *state)
