@@ -1,0 +1,16 @@
+Required Packages:
+
+    apt-get install libncurses-dev
+
+If you're on OSX, you'll also need argp:
+
+    brew install argp-standalone
+
+Installation:
+
+    make
+
+Running Program:
+
+    ./viscpr -i hello.defl
+    ./viscpr -? 
