@@ -25,8 +25,6 @@ int main(int argc, char *argv[])
     vis_init_screen(infile_buf, infile_sz);
     vis_start();
 
-    getchar();
-
     vis_cleanup();
 
     return 0;

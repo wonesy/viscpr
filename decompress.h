@@ -11,6 +11,25 @@ enum dc_state {
     FSM_IDLE = 0,
     FSM_BFINAL,
     FSM_ENCODING,
+    FSM_BUILD_STATIC_TREE,
+    FSM_DYN_HEAD_RD_HLIT,
+    FSM_DYN_HEAD_RD_HDIST,
+    FSM_DYN_HEAD_RD_HCLEN,
+    FSM_READ_LEN_NLEN
+};
+
+struct huff_node {
+    int code;
+    struct huff_node *zero;
+    struct huff_node *one;
+};
+
+struct huff_tree {
+    uint8_t lit_len_cl[286];
+    uint8_t dist_cl[30];
+
+    uint16_t lit_len_symb[286];
+    uint16_t dist_symb[30];
 };
 
 struct dc_stream {
@@ -27,12 +46,7 @@ struct dc_stream {
     enum dc_state cur_state;
     enum dc_state next_state;
     enum dc_state prev_state;
-};
-
-struct huff_node {
-    int code;
-    struct huff_node *zero;
-    struct huff_node *one;
+    struct huff_tree tree;
 };
 
 struct dc_stream dc_init(uint8_t *, int);

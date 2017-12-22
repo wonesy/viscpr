@@ -88,16 +88,16 @@ void dc_build_static_tree(struct dc_stream *s)
     for (int i = 0; i < NUM_LITLEN; i++)
     {
         if (i == 0) {
-            cl = 8; 
+            cl = 8;
             symb = 0x30;
         } else if (i == 144) {
-            cl = 9; 
+            cl = 9;
             symb = 0x190;
         } else if (i == 256) {
-            cl = 7; 
+            cl = 7;
             symb = 0x0;
         } else if (i == 280) {
-            cl = 8; 
+            cl = 8;
             symb = 0xC0;
         }
 
@@ -145,7 +145,7 @@ void dc_step(struct dc_stream *s)
             dc_get_encoding(s);
 
             if (s->encoding == STATIC_ENCODING) {
-                s->next_state = FSM_BUILD_STATIC_TREE;
+                dc_build_static_tree(s);
             } else if (s->encoding == DYNAMIC_ENCODING) {
                 s->next_state = FSM_DYN_HEAD_RD_HLIT;
             } else {
@@ -154,7 +154,6 @@ void dc_step(struct dc_stream *s)
 
             break;
         case FSM_BUILD_STATIC_TREE:
-            dc_build_static_tree(s);
             break;
         default:
             break;

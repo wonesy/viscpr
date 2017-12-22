@@ -14,8 +14,18 @@
 #define W_NEXTLN wmove(win, ++y, x)
 #define W_BOLD_ON wattron(win, COLOR_PAIR(1) | A_BOLD)
 #define W_BOLD_OFF wattroff(win, COLOR_PAIR(1) | A_BOLD)
+#define IF_PREV_STATE(X, S)             \
+    do{                                 \
+        if (s->prev_state == (X)) {     \
+            (S);                        \
+        }                               \
+    } while(0)
+
+;
 
 int util_wprint_buf(WINDOW *, char *, uint8_t *, int, int, int);
-int util_wupdate_status(WINDOW *,  char *, struct dc_stream);
+int util_wupdate_status(WINDOW *,  char *, struct dc_stream *);
+int util_wupdate_tree(WINDOW *,  char *, struct dc_stream *);
+void util_wprint_cmd(WINDOW *win);
 
 #endif
